@@ -8,7 +8,7 @@ namespace NetAssist.Models
 {
     public class Server : NetworkDevice
     {
-        public string OperatingSystem { get; set; }
+        public string operatingSystem { get; set; }
         public override string GetDeviceType()
         {
             return "Servidor";

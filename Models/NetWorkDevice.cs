@@ -11,6 +11,8 @@ namespace NetAssist.Models
         public string hostname { get; set; }
         public string ipAddress { get; set; }
         public string macAddress { get; set; }
+        public string gateway { get; set; }
+        public DeviceStatus status { get; set; }
         public abstract string GetDeviceType();
     }
 }

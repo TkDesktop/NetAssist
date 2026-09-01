@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace NetAssist.Models
 {
-    public class Router : NetworkDevice
+    public enum DeviceStatus
     {
-            public override string GetDeviceType()
-            {
-                return "Roteador";
-            }
+        Unknown,
+        Online,
+        Offline
     }
 }
