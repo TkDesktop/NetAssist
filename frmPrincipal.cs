@@ -20,6 +20,12 @@ namespace NetAssist
         public Form1()
         {
             InitializeComponent();
+
+            NetworkDiscoveryService discoveryService = new NetworkDiscoveryService();
+
+            int prefixo = discoveryService.GetPrefixFromMask("255.255.255.0");
+
+            MessageBox.Show("Prefixo: /" + prefixo);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -85,37 +91,25 @@ namespace NetAssist
 
 
 /*
- 
-
-
-na linha  + $"Mensagem: {resultadoPing.message}"; Colocar um if else pra nao dificultar a leitura da mensagem 
- */
-
-
-/*
- * ================================================================================
 PROMPT DE CONTINUIDADE — PROJETO NETASSIST
-==========================================
-
-Quero continuar o desenvolvimento do projeto NetAssist exatamente a partir do
-estado descrito abaixo.
+Quero continuar o desenvolvimento do projeto NetAssist exatamente a partir do estado descrito abaixo.
 
 IMPORTANTE:
+
 O desenvolvimento deve continuar de forma PASSO A PASSO e DIDÁTICA.
 
 NÃO entregar várias etapas de uma vez.
 
 Para cada etapa:
 
-1. Explicar o objetivo;
-2. Informar qual arquivo criar ou alterar;
-3. Mostrar o código completo daquela etapa;
-4. Explicar as partes importantes do código;
-5. Explicar o conceito de C# e POO utilizado;
-6. Mostrar como testar;
-7. Esperar eu testar;
-8. Somente depois avançar para a próxima etapa.
-
+Explicar o objetivo;
+Informar qual arquivo criar ou alterar;
+Mostrar o código completo daquela etapa;
+Explicar as partes importantes do código;
+Explicar o conceito de C# e POO utilizado;
+Mostrar como testar;
+Esperar eu testar;
+Somente depois avançar para a próxima etapa.
 Não alterar funcionalidades existentes sem necessidade.
 
 Evitar código desnecessariamente complexo.
@@ -124,70 +118,62 @@ Priorizar código organizado, reutilizável, simples e fácil de manter.
 
 O objetivo não é apenas construir o NetAssist, mas também aprender:
 
-* C#;
-* Programação Orientada a Objetos;
-* Classes;
-* Objetos;
-* Herança;
-* Abstração;
-* Polimorfismo;
-* Encapsulamento;
-* Interfaces;
-* Coleções;
-* Separação de responsabilidades;
-* Serviços;
-* Arquitetura;
-* Boas práticas.
-
+C#;
+Programação Orientada a Objetos;
+Classes;
+Objetos;
+Herança;
+Abstração;
+Polimorfismo;
+Encapsulamento;
+Interfaces;
+Coleções;
+Separação de responsabilidades;
+Serviços;
+Arquitetura;
+Boas práticas.
 ================================================================================
 PROJETO
-=======
-
 Nome:
 
 NetAssist
 
 Tecnologias:
 
-* C#
-* .NET
-* Windows Forms
-* Visual Studio
-* Programação Orientada a Objetos
-
+C#
+.NET
+Windows Forms
+Visual Studio
+Programação Orientada a Objetos
 Objetivo:
 
 Criar uma aplicação desktop para Windows destinada a auxiliar profissionais
 de redes em tarefas como:
 
-* Diagnóstico de conectividade;
-* Ping;
-* DNS;
-* Traceroute;
-* Scanner de portas;
-* Descoberta de dispositivos;
-* Inventário;
-* Monitoramento;
-* Alertas;
-* Registro de eventos.
-
+Diagnóstico de conectividade;
+Ping;
+DNS;
+Traceroute;
+Scanner de portas;
+Descoberta de dispositivos;
+Inventário;
+Monitoramento;
+Alertas;
+Registro de eventos.
 Futuramente:
 
-* Banco de dados;
-* Dashboard;
-* Gráficos;
-* Histórico;
-* Relatórios;
-* Logs;
-* Descoberta automática de dispositivos;
-* Informações de interfaces de rede;
-* Wake-on-LAN;
-* Sistema de usuários e permissões.
-
+Banco de dados;
+Dashboard;
+Gráficos;
+Histórico;
+Relatórios;
+Logs;
+Descoberta automática de dispositivos;
+Informações de interfaces de rede;
+Wake-on-LAN;
+Sistema de usuários e permissões.
 ================================================================================
 PADRÃO DE NOMENCLATURA
-======================
-
 Manter este padrão em todo o projeto.
 
 Classes:
@@ -214,6 +200,12 @@ dispositivo
 pingService
 resultadoPing
 manager
+discoveryService
+subnetMask
+prefixo
+partes
+valor
+bits
 
 Propriedades devem utilizar camelCase:
 
@@ -235,6 +227,7 @@ AddDevice()
 GetDevices()
 FindByIp()
 TestConnection()
+GetPrefixFromMask()
 
 IMPORTANTE:
 
@@ -256,30 +249,26 @@ managementVlan
 
 ================================================================================
 ESTRUTURA ATUAL DO PROJETO
-==========================
-
 NetAssist
 │
 ├── Models
-│   ├── NetworkDevice.cs
-│   ├── Router.cs
-│   ├── Switch.cs
-│   ├── Server.cs
-│   ├── AccessPoint.cs
-│   ├── DeviceStatus.cs
-│   └── PingResult.cs
+│ ├── NetworkDevice.cs
+│ ├── Router.cs
+│ ├── Switch.cs
+│ ├── Server.cs
+│ ├── AccessPoint.cs
+│ ├── DeviceStatus.cs
+│ └── PingResult.cs
 │
 ├── Services
-│   ├── PingService.cs
-│   ├── NetworkDeviceManager.cs
-│   └── NetworkDiscoveryService.cs
+│ ├── PingService.cs
+│ ├── NetworkDeviceManager.cs
+│ └── NetworkDiscoveryService.cs
 │
 └── Form1.cs
 
 ================================================================================
 MODEL — NetworkDevice
-=====================
-
 Arquivo:
 
 Models/NetworkDevice.cs
@@ -292,7 +281,6 @@ public abstract class NetworkDevice
 {
 public string hostname { get; set; }
 
-```
     public string ipAddress { get; set; }
 
     public string macAddress { get; set; }
@@ -303,21 +291,17 @@ public string hostname { get; set; }
 
     public abstract string GetDeviceType();
 }
-```
 
 }
 
 Conceitos já aprendidos:
 
-* Abstração;
-* Classe abstrata;
-* Propriedades;
-* Método abstrato.
-
+Abstração;
+Classe abstrata;
+Propriedades;
+Método abstrato.
 ================================================================================
 MODEL — Router
-==============
-
 Arquivo:
 
 Models/Router.cs
@@ -341,8 +325,6 @@ Atualmente não possui propriedades específicas.
 
 ================================================================================
 MODEL — Switch
-==============
-
 Arquivo:
 
 Models/Switch.cs
@@ -355,20 +337,16 @@ public class Switch : NetworkDevice
 {
 public int managementVlan { get; set; }
 
-```
     public override string GetDeviceType()
     {
         return "Switch";
     }
 }
-```
 
 }
 
 ================================================================================
 MODEL — Server
-==============
-
 Arquivo:
 
 Models/Server.cs
@@ -381,20 +359,16 @@ public class Server : NetworkDevice
 {
 public string operatingSystem { get; set; }
 
-```
     public override string GetDeviceType()
     {
         return "Servidor";
     }
 }
-```
 
 }
 
 ================================================================================
 MODEL — AccessPoint
-===================
-
 Arquivo:
 
 Models/AccessPoint.cs
@@ -407,20 +381,16 @@ public class AccessPoint : NetworkDevice
 {
 public string ssid { get; set; }
 
-```
     public override string GetDeviceType()
     {
         return "Access Point";
     }
 }
-```
 
 }
 
 ================================================================================
 MODEL — DeviceStatus
-====================
-
 Arquivo:
 
 Models/DeviceStatus.cs
@@ -439,13 +409,10 @@ Offline
 
 Conceito aprendido:
 
-* enum;
-* representação de estados conhecidos.
-
+enum;
+representação de estados conhecidos.
 ================================================================================
 MODEL — PingResult
-==================
-
 Arquivo:
 
 Models/PingResult.cs
@@ -458,22 +425,16 @@ public class PingResult
 {
 public DeviceStatus status { get; set; }
 
-```
     public long latency { get; set; }
 
     public string message { get; set; }
 }
-```
 
 }
 
 Objetivo:
 
 Representar o resultado de uma operação de Ping.
-
-Conceito aprendido:
-
-Uma classe pode representar o resultado de uma operação.
 
 O serviço executa a operação.
 
@@ -483,8 +444,6 @@ Isso ajuda na separação de responsabilidades.
 
 ================================================================================
 SERVICE — PingService
-=====================
-
 Arquivo:
 
 Services/PingService.cs
@@ -507,7 +466,6 @@ using (Ping ping = new Ping())
 {
 PingReply reply = ping.Send(ipAddress);
 
-```
                 if (reply.Status == IPStatus.Success)
                 {
                     return new PingResult
@@ -529,7 +487,7 @@ PingReply reply = ping.Send(ipAddress);
         catch (Exception ex)
         {
             return new PingResult
-            {
+        {
                 status = DeviceStatus.Unknown,
                 latency = 0,
                 message = $"Erro ao executar o Ping: {ex.Message}"
@@ -537,7 +495,6 @@ PingReply reply = ping.Send(ipAddress);
         }
     }
 }
-```
 
 }
 
@@ -545,27 +502,23 @@ O PingService já foi testado.
 
 Testes realizados:
 
-* Ping para 8.8.8.8 funcionou;
-* Ping retornou status;
-* Ping retornou latência;
-* Ping retornou mensagem;
-* endereço inválido foi tratado com try/catch;
-* projeto compilou corretamente.
-
+Ping para 8.8.8.8 funcionou;
+Ping retornou status;
+Ping retornou latência;
+Ping retornou mensagem;
+endereço inválido foi tratado com try/catch;
+projeto compilou corretamente.
 Conceitos aprendidos:
 
-* Serviços;
-* separação de responsabilidades;
-* retorno de objetos;
-* try/catch;
-* Exception;
-* enum;
-* composição entre classes.
-
+Serviços;
+separação de responsabilidades;
+retorno de objetos;
+try/catch;
+Exception;
+enum;
+composição entre classes.
 ================================================================================
 SERVICE — NetworkDeviceManager
-==============================
-
 Arquivo:
 
 Services/NetworkDeviceManager.cs
@@ -579,9 +532,9 @@ namespace NetAssist.Services
 {
 public class NetworkDeviceManager
 {
-private List<NetworkDevice> dispositivos = new List<NetworkDevice>();
+private List<NetworkDevice> dispositivos =
+new List<NetworkDevice>();
 
-```
     public void AddDevice(NetworkDevice dispositivo)
     {
         dispositivos.Add(dispositivo);
@@ -605,11 +558,10 @@ private List<NetworkDevice> dispositivos = new List<NetworkDevice>();
         return null;
     }
 }
-```
 
 }
 
-Funcionalidades já implementadas:
+Funcionalidades implementadas:
 
 AddDevice()
 GetDevices()
@@ -617,67 +569,375 @@ FindByIp()
 
 Conceitos aprendidos:
 
-* Encapsulamento;
-* private;
-* coleções;
-* List<T>;
-* IReadOnlyList<T>;
-* herança;
-* polimorfismo;
-* retorno de objetos;
-* null;
-* foreach.
+Encapsulamento;
+private;
+coleções;
+List<T>;
+IReadOnlyList<T>;
+herança;
+polimorfismo;
+retorno de objetos;
+null;
+foreach.
+O FindByIp() já foi testado.
+
+Teste realizado:
+
+Busca:
+
+192.168.1.20
+
+Resultado:
+
+SRV-01
+Servidor
+
+Também foi testado:
+
+192.168.1.99
+
+Resultado:
+
+null / dispositivo não encontrado.
+
+Portanto o FindByIp() está funcionando corretamente.
 
 ================================================================================
 SERVICE — NetworkDiscoveryService
-=================================
-
 Arquivo:
 
 Services/NetworkDiscoveryService.cs
 
-A classe foi criada, mas ainda NÃO possui implementação.
+A classe foi criada e agora possui uma primeira funcionalidade.
 
 Código atual:
+
+using System;
 
 namespace NetAssist.Services
 {
 public class NetworkDiscoveryService
 {
+public int GetPrefixFromMask(string subnetMask)
+{
+string[] partes = subnetMask.Split('.');
+
+        if (partes.Length != 4)
+        {
+            throw new ArgumentException(
+                "A máscara deve estar no formato 255.255.255.0."
+            );
+        }
+
+        int prefixo = 0;
+        bool encontrouZero = false;
+
+        foreach (string parte in partes)
+        {
+            if (!int.TryParse(parte, out int valor) ||
+                valor < 0 ||
+                valor > 255)
+            {
+                throw new ArgumentException(
+                    "Máscara de rede inválida."
+                );
+            }
+
+            int bits;
+
+            switch (valor)
+            {
+                case 255:
+                    bits = 8;
+                    break;
+
+                case 254:
+                    bits = 7;
+                    break;
+
+                case 252:
+                    bits = 6;
+                    break;
+
+                case 248:
+                    bits = 5;
+                    break;
+
+                case 240:
+                    bits = 4;
+                    break;
+
+                case 224:
+                    bits = 3;
+                    break;
+
+                case 192:
+                    bits = 2;
+                    break;
+
+                case 128:
+                    bits = 1;
+                    break;
+
+                case 0:
+                    bits = 0;
+                    break;
+
+                default:
+                    throw new ArgumentException(
+                        "Máscara de rede inválida."
+                    );
+            }
+
+            if (encontrouZero && valor != 0)
+            {
+                throw new ArgumentException(
+                    "Máscara de rede inválida."
+                );
+            }
+
+            prefixo += bits;
+
+            if (valor != 255)
+            {
+                encontrouZero = true;
+            }
+        }
+
+        return prefixo;
+    }
 }
+
 }
 
 IMPORTANTE:
 
-Essa classe foi criada propositalmente apenas como estrutura.
+A versão acima foi ligeiramente melhorada durante o desenvolvimento.
 
-A descoberta automática de dispositivos ainda NÃO foi implementada.
+Foi utilizado:
 
-Não implementar tudo de uma vez.
+int.TryParse()
 
-A evolução planejada é:
+em vez de:
 
-1. Descobrir IPs ativos em uma rede;
-2. Obter informações dos dispositivos;
-3. Tentar descobrir hostname;
-4. Obter MAC/fabricante quando possível;
-5. Fazer classificações com base em evidências;
-6. Criar objetos NetworkDevice;
-7. Adicionar os dispositivos ao NetworkDeviceManager.
+int.Parse()
+
+Também foi criada a variável:
+
+bool encontrouZero = false;
+
+Essa variável permite rejeitar máscaras não contíguas.
+
+Exemplo válido:
+
+255.255.255.0
+
+Exemplo inválido:
+
+255.255.0.255
+
+O switch converte os valores possíveis da máscara em quantidade de bits:
+
+255 → 8
+254 → 7
+252 → 6
+248 → 5
+240 → 4
+224 → 3
+192 → 2
+128 → 1
+0 → 0
+
+Exemplos:
+
+255.255.255.0 → /24
+255.255.255.128 → /25
+255.255.255.192 → /26
+
+A funcionalidade já foi testada e está funcionando.
+
+================================================================================
+DECISÃO DE PROJETO — ENTRADA DA REDE
+Foi decidido que o usuário NÃO deverá precisar informar diretamente o CIDR.
+
+Não queremos depender de:
+
+192.168.1.0/24
+
+como entrada principal.
+
+A interface futura deverá preferencialmente trabalhar com:
+
+IP:
+
+192.168.1.0
+
+Máscara:
+
+255.255.255.0
+
+O NetAssist será responsável por converter a máscara para o prefixo.
+
+Exemplo:
+
+255.255.255.0 → /24
+
+255.255.255.128 → /25
+
+255.255.255.192 → /26
+
+Motivo:
+
+Isso é mais amigável para o usuário que pode conhecer IP e máscara,
+mas não necessariamente lembrar o prefixo CIDR.
+
+Arquitetura futura:
+
+TextBox do IP
+↓
+TextBox da Máscara
+↓
+Form1
+↓
+NetworkDiscoveryService
+↓
+Processamento da rede
+
+IMPORTANTE:
+
+A interface definitiva ainda NÃO foi criada.
+
+Os valores continuam sendo utilizados diretamente nos testes.
+
+================================================================================
+FORM1 — ESTADO ATUAL
+O Form1 continua sendo utilizado para testes temporários.
+
+O teste antigo:
+
+discoveryService.ValidateNetwork("192.168.1.0/24");
+
+foi removido porque o método ValidateNetwork() não faz mais parte da versão
+atual da NetworkDiscoveryService.
+
+O teste atual utiliza:
+
+NetworkDiscoveryService discoveryService =
+new NetworkDiscoveryService();
+
+int prefixo =
+discoveryService.GetPrefixFromMask("255.255.255.0");
+
+MessageBox.Show(
+"Prefixo: /" + prefixo
+);
+
+Resultado esperado:
+
+Prefixo: /24
+
+Esse teste já foi realizado com sucesso.
+
+O Form1 ainda é provisório.
+
+Ainda NÃO criar a interface definitiva de diagnóstico ou descoberta.
+
+================================================================================
+CONCEITOS JÁ APRENDIDOS
+Até este ponto já foram praticados:
+
+Classes;
+Objetos;
+Propriedades;
+Métodos;
+Métodos abstratos;
+Classes abstratas;
+Abstração;
+Herança;
+Polimorfismo;
+override;
+enum;
+List<T>;
+IReadOnlyList<T>;
+private;
+Encapsulamento;
+foreach;
+null;
+try/catch;
+Exception;
+serviços;
+separação de responsabilidades;
+retorno de objetos;
+retorno de valores;
+string.Split();
+arrays;
+int.Parse();
+int.TryParse();
+switch;
+validação de dados;
+conceitos básicos de IPv4;
+máscara de rede;
+prefixo CIDR.
+================================================================================
+IDEIA FUTURA — DESCOBERTA DE DISPOSITIVOS
+A funcionalidade futura deverá permitir ao usuário informar:
+
+IP:
+
+192.168.1.0
+
+Máscara:
+
+255.255.255.0
+
+O NetAssist deverá então:
+
+Identificar a rede;
+Determinar a faixa de endereços;
+Gerar os endereços que deverão ser analisados;
+Fazer Ping;
+Tentar descobrir hostname;
+Obter MAC/fabricante quando possível;
+Coletar outras informações;
+Fazer classificação com base em evidências;
+Criar objetos NetworkDevice;
+Adicionar os dispositivos ao NetworkDeviceManager.
+Fluxo futuro:
+
+IP + Máscara
+↓
+Endereço da rede
+↓
+Faixa de IPs
+↓
+Ping
+↓
+Hostname
+↓
+MAC/Fabricante
+↓
+Outras informações
+↓
+Classificação
+↓
+NetworkDevice
+↓
+NetworkDeviceManager
+
+IMPORTANTE:
 
 A classificação NÃO deve assumir que um equipamento é Router,
 Switch, Server ou AccessPoint apenas porque respondeu ao Ping.
 
-O sistema deverá considerar informações como:
+A classificação deverá considerar informações como:
 
-* Ping;
-* hostname;
-* MAC;
-* fabricante;
-* portas;
-* SNMP quando disponível e autorizado;
-* outras informações de rede.
-
+Ping;
+hostname;
+MAC;
+fabricante;
+portas;
+SNMP quando disponível e autorizado;
+outras informações de rede.
 Quando não houver informação suficiente:
 
 DeviceStatus.Unknown
@@ -687,290 +947,47 @@ ou classificação desconhecida deve ser aceita.
 Não inventar classificações.
 
 ================================================================================
-TESTE ANTERIOR DE HERANÇA E POLIMORFISMO
-========================================
+PRÓXIMA ETAPA
+O próximo passo lógico é descobrir o endereço da rede a partir de:
 
-Esse teste já foi realizado e funcionou.
+IP:
 
-Foram criados:
+192.168.1.25
 
-Router router
-Switch switchCore
-Server server
-AccessPoint accessPoint
+Máscara:
 
-Foi utilizada:
-
-List<NetworkDevice>
-
-E:
-
-foreach (NetworkDevice dispositivo in dispositivos)
-
-O resultado mostrou:
-
-Roteador
-Switch
-Servidor
-Access Point
-
-Também foi comprovado:
-
-NetworkDevice dispositivo1 = router;
-NetworkDevice dispositivo2 = switchCore;
-
-dispositivo1.GetDeviceType();
-dispositivo2.GetDeviceType();
+255.255.255.0
 
 Resultado:
 
-Roteador
-Switch
+192.168.1.0
 
-Portanto:
+Isso é necessário porque o usuário pode informar o IP de qualquer
+equipamento da rede, e não necessariamente o endereço da rede.
 
-* herança funciona;
-* polimorfismo funciona;
-* lista de NetworkDevice funciona.
+Exemplo:
 
-================================================================================
-ESTADO ATUAL DO FORM1
-=====================
-
-O Form1 está sendo usado atualmente para testes temporários.
-
-O último teste envolveu:
-
-NetworkDeviceManager manager = new NetworkDeviceManager();
-
-Criação de:
-
-Router router
-Switch switchCore
-Server server
-AccessPoint accessPoint
-
-Adição através de:
-
-manager.AddDevice(router);
-manager.AddDevice(switchCore);
-manager.AddDevice(server);
-manager.AddDevice(accessPoint);
-
-Consulta através de:
-
-IReadOnlyList<NetworkDevice> dispositivos = manager.GetDevices();
-
-E foreach para mostrar:
-
-* hostname;
-* ipAddress;
-* GetDeviceType().
-
-Também foi criado um teste de FindByIp():
-
-NetworkDevice dispositivoEncontrado =
-manager.FindByIp("192.168.1.20");
-
-Esse teste deve encontrar:
-
-SRV-01
-192.168.1.20
-Servidor
-
-Também deve ser testado um IP inexistente, como:
-
-192.168.1.99
-
-que deve retornar null.
+192.168.1.25
+255.255.255.0
+↓
+192.168.1.0
 
 IMPORTANTE:
 
-O Form1 ainda é provisório.
+Ainda NÃO implementar:
 
-Ainda NÃO criar a interface definitiva de diagnóstico.
-
-Os testes temporários podem ser removidos posteriormente.
-
-================================================================================
-IDEIA FUTURA — DESCOBERTA DE DISPOSITIVOS
-=========================================
-
-Quero implementar futuramente uma funcionalidade onde o usuário possa informar
-uma rede, por exemplo:
-
-192.168.1.0/24
-
-E o NetAssist possa verificar os endereços:
-
-192.168.1.1
-192.168.1.2
-192.168.1.3
-...
-192.168.1.254
-
-Depois:
-
-IP
-↓
-Ping
-↓
-Hostname
-↓
-MAC/fabricante
-↓
-outras informações
-↓
-tentativa de classificação
-↓
-NetworkDevice
-↓
-NetworkDeviceManager
-
-Resultado esperado futuramente:
-
-## IP              Hostname       Tipo
-
-192.168.1.1     RTR-CORE-01    Router
-192.168.1.2     SW-CORE-01     Switch
-192.168.1.10    AP-01          Access Point
-192.168.1.20    SRV-01         Server
-
-Quando não houver evidências suficientes:
-
-Tipo: Desconhecido
-
-================================================================================
-MÓDULOS FUTUROS
-===============
-
-MÓDULO 1 — DIAGNÓSTICO
-
-Entrada:
-
-IP ou domínio
-
-Funcionalidades:
-
-* Ping;
-* DNS;
-* Traceroute;
-* Portas.
-
-Exemplo:
-
-========== DIAGNÓSTICO ==========
-
-Host: 8.8.8.8
-
-PING
-Status: ONLINE
-Latência: 18 ms
-
-DNS
-Status: OK
-
-TRACEROUTE
-Saltos encontrados: 12
-
-PORTAS
-80   → Aberta
-443  → Aberta
-22   → Fechada
-
-MÓDULO 2 — SCANNER DE PORTAS
-
-Permitir:
-
-* IP;
-* Porta inicial;
-* Porta final;
-* Lista de portas.
-
-Uso inicialmente voltado para redes autorizadas.
-
-MÓDULO 3 — INVENTÁRIO
-
-Permitir cadastro de:
-
-* Router;
-* Switch;
-* Access Point;
-* Server;
-* Computador.
-
-Futuramente salvar no banco de dados.
-
-MÓDULO 4 — MONITORAMENTO
-
-Monitorar dispositivos automaticamente.
-
-Exemplo:
-
-## Equipamento       IP              Status
-
-Router            192.168.1.1     Online
-SW-CORE-01       192.168.1.2     Online
-SW-ACCESS-01     192.168.1.3     Offline
-AP-01             192.168.1.10    Online
-Servidor          192.168.1.20    Online
-
-Futuramente:
-
-* Intervalo configurável;
-* Alertas;
-* Registro de eventos;
-* Histórico de disponibilidade.
-
-================================================================================
-ARQUITETURA FUTURA
-==================
-
-Models:
-
-Representam os dados e entidades.
-
-Services:
-
-Executam operações e regras da aplicação.
-
-Forms:
-
-Responsáveis pela interface gráfica.
-
-Exemplo:
-
-Models
-↓
-NetworkDevice
-Router
-Switch
-Server
-AccessPoint
-DeviceStatus
-PingResult
-
-Services
-↓
-PingService
-NetworkDeviceManager
-NetworkDiscoveryService
-DnsService
-TracerouteService
-PortScannerService
-NetworkMonitorService
-
-Forms
-↓
-FrmPrincipal
-FrmDiagnostico
-FrmInventario
-FrmMonitoramento
+Ping da rede;
+geração completa dos IPs;
+hostname;
+MAC;
+fabricante;
+classificação;
+criação automática de NetworkDevice;
+NetworkDeviceManager integrado à descoberta.
+Tudo deve continuar sendo implementado em pequenas etapas.
 
 ================================================================================
 REGRA DE DESENVOLVIMENTO
-========================
-
 Sempre avançar uma etapa por vez.
 
 Não entregar o projeto inteiro.
@@ -988,68 +1005,36 @@ Somente então continuar.
 
 ================================================================================
 PONTO EXATO ONDE PARAMOS
-========================
+A conversão de máscara para prefixo já está implementada e testada.
 
-A classe:
+Exemplo:
 
-NetworkDiscoveryService
+255.255.255.0 → /24
 
-foi criada com sucesso:
+A versão atual utiliza int.TryParse(), switch e a variável encontrouZero
+para validar máscaras.
 
-namespace NetAssist.Services
-{
-public class NetworkDiscoveryService
-{
-}
-}
+A decisão de projeto é utilizar IP + Máscara na interface, e não exigir que
+o usuário conheça CIDR.
 
-O próximo passo lógico ainda NÃO foi implementado.
+O próximo passo é implementar somente o cálculo do endereço da rede.
 
-Antes de implementar a descoberta automática, precisamos terminar o teste do
-FindByIp() no NetworkDeviceManager.
+Exemplo:
 
-O teste deve confirmar:
+IP:
+192.168.1.25
 
-1. Buscar:
-
-192.168.1.20
+Máscara:
+255.255.255.0
 
 Resultado:
 
-SRV-01
-Servidor
+192.168.1.0
 
-2. Buscar um IP inexistente:
-
-192.168.1.99
-
-Resultado:
-
-null / "Dispositivo não encontrado."
-
-Depois desse teste, podemos avançar gradualmente.
-
-Uma possível próxima etapa será começar a implementar a descoberta de uma
-rede na NetworkDiscoveryService, mas isso deve ser feito em pequenas etapas.
-
-Por exemplo:
-
-Primeiro apenas definir como receber uma rede/faixa de IP.
-
-Depois gerar os endereços.
-
-Depois testar Ping.
-
-Depois identificar informações.
-
-Depois classificar.
-
-Não implementar tudo de uma vez.
+Não avançar além dessa etapa.
 
 ================================================================================
 INSTRUÇÃO FINAL
-===============
-
 Continue o projeto exatamente desse ponto.
 
 Primeiro confirme que entendeu o estado atual.
@@ -1064,17 +1049,18 @@ Não avance várias etapas.
 
 Siga o formato:
 
-1. Objetivo;
-2. Arquivo;
-3. Código completo;
-4. Explicação;
-5. Conceito de POO/C#;
-6. Teste;
-7. Esperar minha confirmação.
+Objetivo;
+Arquivo;
+Código completo;
+Explicação;
+Conceito de POO/C#;
+Teste;
+Esperar minha confirmação.
+O foco é construir o NetAssist enquanto eu aprendo C# e POO na prática.
 
-# O foco é construir o NetAssist enquanto eu aprendo C# e POO na prática.
-
-# FIM DO PROMPT DE CONTINUIDADE
+FIM DO PROMPT DE CONTINUIDADE
 */
+
+
 
 
