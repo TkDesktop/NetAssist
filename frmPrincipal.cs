@@ -21,163 +21,112 @@ namespace NetAssist
         {
             InitializeComponent();
 
-            NetworkDiscoveryService discoveryService = new NetworkDiscoveryService();
+            NetworkDiscoveryService discoveryService =
+    new NetworkDiscoveryService();
 
-            int prefixo = discoveryService.GetPrefixFromMask("255.255.255.0");
+            PingService pingService =
+                new PingService();
 
-            MessageBox.Show("Prefixo: /" + prefixo);
+            List<string> ipAddresses =
+                discoveryService.GetUsableIpAddresses(
+                    "192.168.56.1",
+                    "255.255.255.0"
+                );
+
+            List<string> dispositivosEncontrados =
+                new List<string>();
+
+            foreach (string ipAddress in ipAddresses)
+            {
+                PingResult resultadoPing =
+                    pingService.TestConnection(ipAddress);
+
+                if (resultadoPing.status == DeviceStatus.Online)
+                {
+                    dispositivosEncontrados.Add(ipAddress);
+                }
+            }
+
+            MessageBox.Show(
+                $"IPs encontrados: {dispositivosEncontrados.Count}"
+            );
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            NetworkDeviceManager manager = new NetworkDeviceManager();
-
-            Router router = new Router();
-            router.hostname = "RTR-CORE-01";
-            router.ipAddress = "192.168.1.1";
-
-            Switch switchCore = new Switch();
-            switchCore.hostname = "SW-CORE-01";
-            switchCore.ipAddress = "192.168.1.2";
-
-            Server server = new Server();
-            server.hostname = "SRV-01";
-            server.ipAddress = "192.168.1.20";
-
-            AccessPoint accessPoint = new AccessPoint();
-            accessPoint.hostname = "AP-01";
-            accessPoint.ipAddress = "192.168.1.10";
-
-            manager.AddDevice(router);
-            manager.AddDevice(switchCore);
-            manager.AddDevice(server);
-            manager.AddDevice(accessPoint);
-
-
-            NetworkDevice dispositivoEncontrado = manager.FindByIp("192.168.1.20");
-
-            if (dispositivoEncontrado != null)
-            {
-                MessageBox.Show(
-                    $"Dispositivo encontrado!\n\n" +
-                    $"Nome: {dispositivoEncontrado.hostname}\n" +
-                    $"IP: {dispositivoEncontrado.ipAddress}\n" +
-                    $"Tipo: {dispositivoEncontrado.GetDeviceType()}"
-                );
-            }
-            else
-            {
-                MessageBox.Show("Dispositivo não encontrado.");
-            }
-
-
-
-            string resultado = "";
-
-            IReadOnlyList<NetworkDevice> dispositivos = manager.GetDevices();
-
-            foreach (NetworkDevice dispositivo in dispositivos)
-            {
-                resultado +=
-                    $"Nome: {dispositivo.hostname}\n" +
-                    $"IP: {dispositivo.ipAddress}\n" +
-                    $"Tipo: {dispositivo.GetDeviceType()}\n\n";
-            }
-
-            MessageBox.Show(resultado);
+            
         }
     }
 }
 
 
 /*
-PROMPT DE CONTINUIDADE — PROJETO NETASSIST
-Quero continuar o desenvolvimento do projeto NetAssist exatamente a partir do estado descrito abaixo.
+ # CONTINUIDADE DO PROJETO NETASSIST
 
-IMPORTANTE:
+Quero continuar o desenvolvimento do meu projeto **NetAssist** exatamente de onde paramos.
 
-O desenvolvimento deve continuar de forma PASSO A PASSO e DIDÁTICA.
+## 1. Projeto
 
-NÃO entregar várias etapas de uma vez.
+* Nome: **NetAssist**
+* Linguagem: **C#**
+* Plataforma: **.NET Windows Forms**
+* IDE: **Visual Studio**
+* Arquitetura: orientação a objetos, separação de responsabilidades e serviços.
+* Objetivo: criar uma ferramenta desktop para diagnóstico e descoberta de dispositivos em redes.
+
+Quero aprender C# e OOP enquanto desenvolvo o projeto.
+
+### REGRA PRINCIPAL
+
+Quero desenvolver **UMA ETAPA POR VEZ**.
+
+Não avance várias etapas de uma vez.
 
 Para cada etapa:
 
-Explicar o objetivo;
-Informar qual arquivo criar ou alterar;
-Mostrar o código completo daquela etapa;
-Explicar as partes importantes do código;
-Explicar o conceito de C# e POO utilizado;
-Mostrar como testar;
-Esperar eu testar;
-Somente depois avançar para a próxima etapa.
-Não alterar funcionalidades existentes sem necessidade.
+1. Explique o objetivo.
+2. Diga qual arquivo será alterado.
+3. Mostre o código completo da etapa.
+4. Explique as partes importantes.
+5. Explique o conceito de C#/OOP envolvido.
+6. Mostre como testar.
+7. Espere eu dizer **"foi"** antes de continuar.
 
-Evitar código desnecessariamente complexo.
+Não complique o projeto desnecessariamente e não altere funcionalidades que já estão funcionando.
 
-Priorizar código organizado, reutilizável, simples e fácil de manter.
+---
 
-O objetivo não é apenas construir o NetAssist, mas também aprender:
+# 2. Estrutura atual
 
-C#;
-Programação Orientada a Objetos;
-Classes;
-Objetos;
-Herança;
-Abstração;
-Polimorfismo;
-Encapsulamento;
-Interfaces;
-Coleções;
-Separação de responsabilidades;
-Serviços;
-Arquitetura;
-Boas práticas.
-================================================================================
-PROJETO
-Nome:
-
+```text
 NetAssist
+│
+├── Models
+│   ├── NetworkDevice.cs
+│   ├── Router.cs
+│   ├── Switch.cs
+│   ├── Server.cs
+│   ├── AccessPoint.cs
+│   ├── DeviceStatus.cs
+│   └── PingResult.cs
+│
+├── Services
+│   ├── PingService.cs
+│   ├── NetworkDeviceManager.cs
+│   └── NetworkDiscoveryService.cs
+│
+└── Form1.cs
+```
 
-Tecnologias:
+---
 
-C#
-.NET
-Windows Forms
-Visual Studio
-Programação Orientada a Objetos
-Objetivo:
-
-Criar uma aplicação desktop para Windows destinada a auxiliar profissionais
-de redes em tarefas como:
-
-Diagnóstico de conectividade;
-Ping;
-DNS;
-Traceroute;
-Scanner de portas;
-Descoberta de dispositivos;
-Inventário;
-Monitoramento;
-Alertas;
-Registro de eventos.
-Futuramente:
-
-Banco de dados;
-Dashboard;
-Gráficos;
-Histórico;
-Relatórios;
-Logs;
-Descoberta automática de dispositivos;
-Informações de interfaces de rede;
-Wake-on-LAN;
-Sistema de usuários e permissões.
-================================================================================
-PADRÃO DE NOMENCLATURA
-Manter este padrão em todo o projeto.
+# 3. Convenção de nomes
 
 Classes:
 
+```text
 NetworkDevice
 Router
 Switch
@@ -188,9 +137,35 @@ PingResult
 PingService
 NetworkDeviceManager
 NetworkDiscoveryService
+```
+
+Propriedades devem seguir o padrão que estamos usando:
+
+```text
+hostname
+ipAddress
+macAddress
+gateway
+status
+managementVlan
+operatingSystem
+ssid
+latency
+message
+```
+
+Não voltar para propriedades PascalCase como:
+
+```text
+OperatingSystem
+Ssid
+Gateway
+ManagementVlan
+```
 
 Variáveis:
 
+```text
 router
 switchCore
 server
@@ -206,860 +181,778 @@ prefixo
 partes
 valor
 bits
+```
 
-Propriedades devem utilizar camelCase:
+---
 
-hostname
-ipAddress
-macAddress
-gateway
-status
-managementVlan
-operatingSystem
-ssid
-latency
-message
-
-Métodos:
-
-GetDeviceType()
-AddDevice()
-GetDevices()
-FindByIp()
-TestConnection()
-GetPrefixFromMask()
-
-IMPORTANTE:
-
-Não voltar a utilizar propriedades como:
-
-OperatingSystem
-Ssid
-Gateway
-ManagementVlan
-
-quando a intenção for seguir o padrão definido.
-
-Utilizar:
-
-operatingSystem
-ssid
-gateway
-managementVlan
-
-================================================================================
-ESTRUTURA ATUAL DO PROJETO
-NetAssist
-│
-├── Models
-│ ├── NetworkDevice.cs
-│ ├── Router.cs
-│ ├── Switch.cs
-│ ├── Server.cs
-│ ├── AccessPoint.cs
-│ ├── DeviceStatus.cs
-│ └── PingResult.cs
-│
-├── Services
-│ ├── PingService.cs
-│ ├── NetworkDeviceManager.cs
-│ └── NetworkDiscoveryService.cs
-│
-└── Form1.cs
-
-================================================================================
-MODEL — NetworkDevice
-Arquivo:
-
-Models/NetworkDevice.cs
+# 4. NetworkDevice.cs
 
 Código atual:
 
+```csharp
 namespace NetAssist.Models
 {
-public abstract class NetworkDevice
-{
-public string hostname { get; set; }
-
-    public string ipAddress { get; set; }
-
-    public string macAddress { get; set; }
-
-    public string gateway { get; set; }
-
-    public DeviceStatus status { get; set; }
-
-    public abstract string GetDeviceType();
-}
-
-}
-
-Conceitos já aprendidos:
-
-Abstração;
-Classe abstrata;
-Propriedades;
-Método abstrato.
-================================================================================
-MODEL — Router
-Arquivo:
-
-Models/Router.cs
-
-Código atual:
-
-namespace NetAssist.Models
-{
-public class Router : NetworkDevice
-{
-public override string GetDeviceType()
-{
-return "Roteador";
-}
-}
-}
-
-Router herda de NetworkDevice.
-
-Atualmente não possui propriedades específicas.
-
-================================================================================
-MODEL — Switch
-Arquivo:
-
-Models/Switch.cs
-
-Código atual:
-
-namespace NetAssist.Models
-{
-public class Switch : NetworkDevice
-{
-public int managementVlan { get; set; }
-
-    public override string GetDeviceType()
+    public abstract class NetworkDevice
     {
-        return "Switch";
+        public string hostname { get; set; }
+
+        public string ipAddress { get; set; }
+
+        public string macAddress { get; set; }
+
+        public string gateway { get; set; }
+
+        public DeviceStatus status { get; set; }
+
+        public abstract string GetDeviceType();
     }
 }
+```
 
-}
+---
 
-================================================================================
-MODEL — Server
-Arquivo:
+# 5. Router.cs
 
-Models/Server.cs
-
-Código atual:
-
+```csharp
 namespace NetAssist.Models
 {
-public class Server : NetworkDevice
-{
-public string operatingSystem { get; set; }
-
-    public override string GetDeviceType()
+    public class Router : NetworkDevice
     {
-        return "Servidor";
+        public override string GetDeviceType()
+        {
+            return "Roteador";
+        }
     }
 }
+```
 
-}
+---
 
-================================================================================
-MODEL — AccessPoint
-Arquivo:
+# 6. Switch.cs
 
-Models/AccessPoint.cs
-
-Código atual:
-
+```csharp
 namespace NetAssist.Models
 {
-public class AccessPoint : NetworkDevice
-{
-public string ssid { get; set; }
-
-    public override string GetDeviceType()
+    public class Switch : NetworkDevice
     {
-        return "Access Point";
+        public int managementVlan { get; set; }
+
+        public override string GetDeviceType()
+        {
+            return "Switch";
+        }
     }
 }
+```
 
-}
+---
 
-================================================================================
-MODEL — DeviceStatus
-Arquivo:
+# 7. Server.cs
 
-Models/DeviceStatus.cs
-
-Código atual:
-
+```csharp
 namespace NetAssist.Models
 {
-public enum DeviceStatus
-{
-Unknown,
-Online,
-Offline
+    public class Server : NetworkDevice
+    {
+        public string operatingSystem { get; set; }
+
+        public override string GetDeviceType()
+        {
+            return "Servidor";
+        }
+    }
 }
-}
+```
 
-Conceito aprendido:
+---
 
-enum;
-representação de estados conhecidos.
-================================================================================
-MODEL — PingResult
-Arquivo:
+# 8. AccessPoint.cs
 
-Models/PingResult.cs
-
-Código atual:
-
+```csharp
 namespace NetAssist.Models
 {
-public class PingResult
+    public class AccessPoint : NetworkDevice
+    {
+        public string ssid { get; set; }
+
+        public override string GetDeviceType()
+        {
+            return "Access Point";
+        }
+    }
+}
+```
+
+---
+
+# 9. DeviceStatus.cs
+
+```csharp
+namespace NetAssist.Models
 {
-public DeviceStatus status { get; set; }
-
-    public long latency { get; set; }
-
-    public string message { get; set; }
+    public enum DeviceStatus
+    {
+        Unknown,
+        Online,
+        Offline
+    }
 }
+```
 
+---
+
+# 10. PingResult.cs
+
+```csharp
+namespace NetAssist.Models
+{
+    public class PingResult
+    {
+        public DeviceStatus status { get; set; }
+
+        public long latency { get; set; }
+
+        public string message { get; set; }
+    }
 }
+```
 
-Objetivo:
+---
 
-Representar o resultado de uma operação de Ping.
+# 11. PingService.cs
 
-O serviço executa a operação.
-
-O objeto representa o resultado.
-
-Isso ajuda na separação de responsabilidades.
-
-================================================================================
-SERVICE — PingService
-Arquivo:
-
-Services/PingService.cs
+IMPORTANTE: recentemente alteramos o timeout do Ping.
 
 Código atual:
 
+```csharp
 using System;
 using System.Net.NetworkInformation;
 using NetAssist.Models;
 
 namespace NetAssist.Services
 {
-public class PingService
-{
-public PingResult TestConnection(string ipAddress)
-{
-try
-{
-using (Ping ping = new Ping())
-{
-PingReply reply = ping.Send(ipAddress);
-
-                if (reply.Status == IPStatus.Success)
+    public class PingService
+    {
+        public PingResult TestConnection(string ipAddress)
+        {
+            try
+            {
+                using (Ping ping = new Ping())
                 {
+                    PingReply reply = ping.Send(ipAddress, 500);
+
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        return new PingResult
+                        {
+                            status = DeviceStatus.Online,
+                            latency = reply.RoundtripTime,
+                            message = "Ping realizado com sucesso."
+                        };
+                    }
+
                     return new PingResult
                     {
-                        status = DeviceStatus.Online,
-                        latency = reply.RoundtripTime,
-                        message = "Ping realizado com sucesso."
+                        status = DeviceStatus.Offline,
+                        latency = 0,
+                        message = "O dispositivo não respondeu ao Ping."
                     };
                 }
-
+            }
+            catch (Exception ex)
+            {
                 return new PingResult
                 {
-                    status = DeviceStatus.Offline,
+                    status = DeviceStatus.Unknown,
                     latency = 0,
-                    message = "O dispositivo não respondeu ao Ping."
+                    message = $"Erro ao executar o Ping: {ex.Message}"
                 };
             }
         }
-        catch (Exception ex)
-        {
-            return new PingResult
-        {
-                status = DeviceStatus.Unknown,
-                latency = 0,
-                message = $"Erro ao executar o Ping: {ex.Message}"
-            };
-        }
     }
 }
+```
 
-}
+O timeout atual é:
 
-O PingService já foi testado.
+```csharp
+ping.Send(ipAddress, 500);
+```
 
-Testes realizados:
+Ou seja:
 
-Ping para 8.8.8.8 funcionou;
-Ping retornou status;
-Ping retornou latência;
-Ping retornou mensagem;
-endereço inválido foi tratado com try/catch;
-projeto compilou corretamente.
-Conceitos aprendidos:
+```text
+500 ms = 0,5 segundo
+```
 
-Serviços;
-separação de responsabilidades;
-retorno de objetos;
-try/catch;
-Exception;
-enum;
-composição entre classes.
-================================================================================
-SERVICE — NetworkDeviceManager
-Arquivo:
+Já testei e funcionou.
 
-Services/NetworkDeviceManager.cs
+---
+
+# 12. NetworkDeviceManager.cs
 
 Código atual:
 
+```csharp
 using NetAssist.Models;
 using System.Collections.Generic;
 
 namespace NetAssist.Services
 {
-public class NetworkDeviceManager
-{
-private List<NetworkDevice> dispositivos =
-new List<NetworkDevice>();
-
-    public void AddDevice(NetworkDevice dispositivo)
+    public class NetworkDeviceManager
     {
-        dispositivos.Add(dispositivo);
-    }
+        private List<NetworkDevice> dispositivos =
+            new List<NetworkDevice>();
 
-    public IReadOnlyList<NetworkDevice> GetDevices()
-    {
-        return dispositivos.AsReadOnly();
-    }
-
-    public NetworkDevice FindByIp(string ipAddress)
-    {
-        foreach (NetworkDevice dispositivo in dispositivos)
+        public void AddDevice(NetworkDevice dispositivo)
         {
-            if (dispositivo.ipAddress == ipAddress)
-            {
-                return dispositivo;
-            }
+            dispositivos.Add(dispositivo);
         }
 
-        return null;
+        public IReadOnlyList<NetworkDevice> GetDevices()
+        {
+            return dispositivos.AsReadOnly();
+        }
+
+        public NetworkDevice FindByIp(string ipAddress)
+        {
+            foreach (NetworkDevice dispositivo in dispositivos)
+            {
+                if (dispositivo.ipAddress == ipAddress)
+                {
+                    return dispositivo;
+                }
+            }
+
+            return null;
+        }
     }
 }
+```
 
-}
+Já testei `FindByIp()` e funcionou.
 
-Funcionalidades implementadas:
+---
 
-AddDevice()
-GetDevices()
-FindByIp()
+# 13. NetworkDiscoveryService.cs
 
-Conceitos aprendidos:
+O serviço já consegue:
 
-Encapsulamento;
-private;
-coleções;
-List<T>;
-IReadOnlyList<T>;
-herança;
-polimorfismo;
-retorno de objetos;
-null;
-foreach.
-O FindByIp() já foi testado.
-
-Teste realizado:
-
-Busca:
-
-192.168.1.20
-
-Resultado:
-
-SRV-01
-Servidor
-
-Também foi testado:
-
-192.168.1.99
-
-Resultado:
-
-null / dispositivo não encontrado.
-
-Portanto o FindByIp() está funcionando corretamente.
-
-================================================================================
-SERVICE — NetworkDiscoveryService
-Arquivo:
-
-Services/NetworkDiscoveryService.cs
-
-A classe foi criada e agora possui uma primeira funcionalidade.
+* validar máscara;
+* calcular prefixo;
+* calcular endereço de rede;
+* calcular broadcast;
+* gerar todos os IPs utilizáveis.
 
 Código atual:
 
+```csharp
 using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 
 namespace NetAssist.Services
 {
-public class NetworkDiscoveryService
-{
-public int GetPrefixFromMask(string subnetMask)
-{
-string[] partes = subnetMask.Split('.');
-
-        if (partes.Length != 4)
+    public class NetworkDiscoveryService
+    {
+        public int GetPrefixFromMask(string subnetMask)
         {
-            throw new ArgumentException(
-                "A máscara deve estar no formato 255.255.255.0."
-            );
-        }
+            string[] partes = subnetMask.Split('.');
 
-        int prefixo = 0;
-        bool encontrouZero = false;
-
-        foreach (string parte in partes)
-        {
-            if (!int.TryParse(parte, out int valor) ||
-                valor < 0 ||
-                valor > 255)
+            if (partes.Length != 4)
             {
                 throw new ArgumentException(
-                    "Máscara de rede inválida."
+                    "A máscara deve estar no formato 255.255.255.0."
                 );
             }
 
-            int bits;
+            int prefixo = 0;
+            bool encontrouZero = false;
 
-            switch (valor)
+            foreach (string parte in partes)
             {
-                case 255:
-                    bits = 8;
-                    break;
-
-                case 254:
-                    bits = 7;
-                    break;
-
-                case 252:
-                    bits = 6;
-                    break;
-
-                case 248:
-                    bits = 5;
-                    break;
-
-                case 240:
-                    bits = 4;
-                    break;
-
-                case 224:
-                    bits = 3;
-                    break;
-
-                case 192:
-                    bits = 2;
-                    break;
-
-                case 128:
-                    bits = 1;
-                    break;
-
-                case 0:
-                    bits = 0;
-                    break;
-
-                default:
+                if (!int.TryParse(parte, out int valor) ||
+                    valor < 0 ||
+                    valor > 255)
+                {
                     throw new ArgumentException(
                         "Máscara de rede inválida."
                     );
+                }
+
+                int bits;
+
+                switch (valor)
+                {
+                    case 255:
+                        bits = 8;
+                        break;
+
+                    case 254:
+                        bits = 7;
+                        break;
+
+                    case 252:
+                        bits = 6;
+                        break;
+
+                    case 248:
+                        bits = 5;
+                        break;
+
+                    case 240:
+                        bits = 4;
+                        break;
+
+                    case 224:
+                        bits = 3;
+                        break;
+
+                    case 192:
+                        bits = 2;
+                        break;
+
+                    case 128:
+                        bits = 1;
+                        break;
+
+                    case 0:
+                        bits = 0;
+                        break;
+
+                    default:
+                        throw new ArgumentException(
+                            "Máscara de rede inválida."
+                        );
+                }
+
+                if (encontrouZero && valor != 0)
+                {
+                    throw new ArgumentException(
+                        "Máscara de rede inválida."
+                    );
+                }
+
+                prefixo += bits;
+
+                if (valor != 255)
+                {
+                    encontrouZero = true;
+                }
             }
 
-            if (encontrouZero && valor != 0)
+            return prefixo;
+        }
+
+        public string GetNetworkAddress(string ipAddress, string subnetMask)
+        {
+            string[] partesIp = ipAddress.Split('.');
+
+            if (partesIp.Length != 4)
             {
                 throw new ArgumentException(
-                    "Máscara de rede inválida."
+                    "O endereço IP deve possuir 4 octetos."
                 );
             }
 
-            prefixo += bits;
-
-            if (valor != 255)
+            if (!IPAddress.TryParse(ipAddress, out IPAddress ip))
             {
-                encontrouZero = true;
+                throw new ArgumentException(
+                    "O endereço IP informado é inválido."
+                );
             }
+
+            if (!IPAddress.TryParse(subnetMask, out IPAddress mask))
+            {
+                throw new ArgumentException(
+                    "A máscara de rede informada é inválida."
+                );
+            }
+
+            if (ip.AddressFamily != AddressFamily.InterNetwork)
+            {
+                throw new ArgumentException(
+                    "O endereço IP deve ser IPv4."
+                );
+            }
+
+            if (mask.AddressFamily != AddressFamily.InterNetwork)
+            {
+                throw new ArgumentException(
+                    "A máscara deve ser IPv4."
+                );
+            }
+
+            byte[] ipBytes = ip.GetAddressBytes();
+            byte[] maskBytes = mask.GetAddressBytes();
+
+            byte[] networkBytes = new byte[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                networkBytes[i] =
+                    (byte)(ipBytes[i] & maskBytes[i]);
+            }
+
+            IPAddress networkAddress =
+                new IPAddress(networkBytes);
+
+            return networkAddress.ToString();
         }
 
-        return prefixo;
+        public string GetBroadcastAddress(
+            string ipAddress,
+            string subnetMask)
+        {
+            string[] partesIp = ipAddress.Split('.');
+
+            if (partesIp.Length != 4)
+            {
+                throw new ArgumentException(
+                    "O endereço IP deve possuir 4 octetos."
+                );
+            }
+
+            if (!IPAddress.TryParse(ipAddress, out IPAddress ip))
+            {
+                throw new ArgumentException(
+                    "O endereço IP informado é inválido."
+                );
+            }
+
+            if (!IPAddress.TryParse(subnetMask, out IPAddress mask))
+            {
+                throw new ArgumentException(
+                    "A máscara de rede informada é inválida."
+                );
+            }
+
+            if (ip.AddressFamily != AddressFamily.InterNetwork)
+            {
+                throw new ArgumentException(
+                    "O endereço IP deve ser IPv4."
+                );
+            }
+
+            if (mask.AddressFamily != AddressFamily.InterNetwork)
+            {
+                throw new ArgumentException(
+                    "A máscara deve ser IPv4."
+                );
+            }
+
+            byte[] ipBytes = ip.GetAddressBytes();
+            byte[] maskBytes = mask.GetAddressBytes();
+
+            byte[] broadcastBytes = new byte[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                broadcastBytes[i] =
+                    (byte)(ipBytes[i] |
+                    (maskBytes[i] ^ 255));
+            }
+
+            IPAddress broadcastAddress =
+                new IPAddress(broadcastBytes);
+
+            return broadcastAddress.ToString();
+        }
+
+        public List<string> GetUsableIpAddresses(
+            string ipAddress,
+            string subnetMask)
+        {
+            string networkAddress =
+                GetNetworkAddress(
+                    ipAddress,
+                    subnetMask
+                );
+
+            string broadcastAddress =
+                GetBroadcastAddress(
+                    ipAddress,
+                    subnetMask
+                );
+
+            IPAddress networkIp =
+                IPAddress.Parse(networkAddress);
+
+            IPAddress broadcastIp =
+                IPAddress.Parse(broadcastAddress);
+
+            byte[] networkBytes =
+                networkIp.GetAddressBytes();
+
+            byte[] broadcastBytes =
+                broadcastIp.GetAddressBytes();
+
+            uint networkValue =
+                ((uint)networkBytes[0] << 24) |
+                ((uint)networkBytes[1] << 16) |
+                ((uint)networkBytes[2] << 8) |
+                networkBytes[3];
+
+            uint broadcastValue =
+                ((uint)broadcastBytes[0] << 24) |
+                ((uint)broadcastBytes[1] << 16) |
+                ((uint)broadcastBytes[2] << 8) |
+                broadcastBytes[3];
+
+            List<string> ipAddresses =
+                new List<string>();
+
+            for (
+                uint valor = networkValue + 1;
+                valor < broadcastValue;
+                valor++)
+            {
+                byte primeiroOcteto =
+                    (byte)(valor >> 24);
+
+                byte segundoOcteto =
+                    (byte)(valor >> 16);
+
+                byte terceiroOcteto =
+                    (byte)(valor >> 8);
+
+                byte quartoOcteto =
+                    (byte)valor;
+
+                string endereco =
+                    $"{primeiroOcteto}." +
+                    $"{segundoOcteto}." +
+                    $"{terceiroOcteto}." +
+                    $"{quartoOcteto}";
+
+                ipAddresses.Add(endereco);
+            }
+
+            return ipAddresses;
+        }
     }
 }
+```
 
-}
+---
 
-IMPORTANTE:
+# 14. Testes já realizados
 
-A versão acima foi ligeiramente melhorada durante o desenvolvimento.
+### Máscara
 
-Foi utilizado:
-
-int.TryParse()
-
-em vez de:
-
-int.Parse()
-
-Também foi criada a variável:
-
-bool encontrouZero = false;
-
-Essa variável permite rejeitar máscaras não contíguas.
-
-Exemplo válido:
-
-255.255.255.0
-
-Exemplo inválido:
-
-255.255.0.255
-
-O switch converte os valores possíveis da máscara em quantidade de bits:
-
-255 → 8
-254 → 7
-252 → 6
-248 → 5
-240 → 4
-224 → 3
-192 → 2
-128 → 1
-0 → 0
-
-Exemplos:
-
+```text
 255.255.255.0 → /24
 255.255.255.128 → /25
 255.255.255.192 → /26
+```
 
-A funcionalidade já foi testada e está funcionando.
+Máscaras inválidas também foram tratadas.
 
-================================================================================
-DECISÃO DE PROJETO — ENTRADA DA REDE
-Foi decidido que o usuário NÃO deverá precisar informar diretamente o CIDR.
+### Endereço de rede
 
-Não queremos depender de:
+```text
+IP: 192.168.1.25
+Máscara: 255.255.255.0
 
-192.168.1.0/24
-
-como entrada principal.
-
-A interface futura deverá preferencialmente trabalhar com:
-
-IP:
-
+Resultado:
 192.168.1.0
+```
 
-Máscara:
+### Broadcast
 
-255.255.255.0
+```text
+IP: 192.168.1.25
+Máscara: 255.255.255.0
 
-O NetAssist será responsável por converter a máscara para o prefixo.
+Resultado:
+192.168.1.255
+```
+
+### Lista de IPs
+
+```text
+IP: 192.168.1.25
+Máscara: 255.255.255.0
+
+Quantidade:
+254
+
+Primeiro:
+192.168.1.1
+
+Último:
+192.168.1.254
+```
+
+Também testamos `/25`:
+
+```text
+IP: 192.168.1.150
+Máscara: 255.255.255.128
+
+Primeiro:
+192.168.1.129
+
+Último:
+192.168.1.254
+
+Quantidade:
+126
+```
+
+---
+
+# 15. Objetivo real do NetAssist
+
+Minha intenção não é simplesmente descobrir o primeiro e último IP.
+
+Quero que o NetAssist futuramente descubra quais IPs estão:
+
+```text
+OCUPADOS
+```
+
+e quais estão:
+
+```text
+POSSIVELMENTE DISPONÍVEIS
+```
 
 Exemplo:
 
-255.255.255.0 → /24
-
-255.255.255.128 → /25
-
-255.255.255.192 → /26
-
-Motivo:
-
-Isso é mais amigável para o usuário que pode conhecer IP e máscara,
-mas não necessariamente lembrar o prefixo CIDR.
-
-Arquitetura futura:
-
-TextBox do IP
-↓
-TextBox da Máscara
-↓
-Form1
-↓
-NetworkDiscoveryService
-↓
-Processamento da rede
+```text
+192.168.1.1    OCUPADO
+192.168.1.2    OCUPADO
+192.168.1.3    NÃO RESPONDEU
+192.168.1.4    OCUPADO
+192.168.1.5    NÃO RESPONDEU
+```
 
 IMPORTANTE:
 
-A interface definitiva ainda NÃO foi criada.
+Um IP que não responde ao Ping **não deve ser automaticamente considerado livre**, porque um equipamento pode estar ligado e bloquear ICMP.
 
-Os valores continuam sendo utilizados diretamente nos testes.
+Portanto, inicialmente:
 
-================================================================================
-FORM1 — ESTADO ATUAL
-O Form1 continua sendo utilizado para testes temporários.
+```text
+Ping respondeu     → OCUPADO / ONLINE
+Ping não respondeu → NÃO RESPONDEU
+```
 
-O teste antigo:
+Depois poderemos fazer outras verificações.
 
-discoveryService.ValidateNetwork("192.168.1.0/24");
+---
 
-foi removido porque o método ValidateNetwork() não faz mais parte da versão
-atual da NetworkDiscoveryService.
+# 16. Próxima etapa EXATA
 
-O teste atual utiliza:
+A última coisa que estávamos prestes a fazer era utilizar:
 
-NetworkDiscoveryService discoveryService =
-new NetworkDiscoveryService();
+```csharp
+Parallel.ForEach()
+```
 
-int prefixo =
-discoveryService.GetPrefixFromMask("255.255.255.0");
+para acelerar os Pings.
 
-MessageBox.Show(
-"Prefixo: /" + prefixo
+Eu sugeri usar:
+
+```csharp
+List<string> dispositivosEncontrados =
+    new List<string>();
+
+Parallel.ForEach(
+    ipAddresses,
+    new ParallelOptions
+    {
+        MaxDegreeOfParallelism = 20
+    },
+    ipAddress =>
+    {
+        PingResult resultadoPing =
+            pingService.TestConnection(ipAddress);
+
+        if (resultadoPing.status == DeviceStatus.Online)
+        {
+            lock (dispositivosEncontrados)
+            {
+                dispositivosEncontrados.Add(ipAddress);
+            }
+        }
+    }
 );
 
-Resultado esperado:
+MessageBox.Show(
+    $"IPs encontrados: {dispositivosEncontrados.Count}"
+);
+```
 
-Prefixo: /24
+O usuário perguntou se isso diminuiria o tempo dos Pings.
 
-Esse teste já foi realizado com sucesso.
+Expliquei que sim, provavelmente bastante, porque atualmente os Pings são executados sequencialmente.
 
-O Form1 ainda é provisório.
+Também expliquei:
 
-Ainda NÃO criar a interface definitiva de diagnóstico ou descoberta.
+```text
+MaxDegreeOfParallelism = 20
+```
 
-================================================================================
-CONCEITOS JÁ APRENDIDOS
-Até este ponto já foram praticados:
+significa no máximo 20 operações simultâneas.
 
-Classes;
-Objetos;
-Propriedades;
-Métodos;
-Métodos abstratos;
-Classes abstratas;
-Abstração;
-Herança;
-Polimorfismo;
-override;
-enum;
-List<T>;
-IReadOnlyList<T>;
-private;
-Encapsulamento;
-foreach;
-null;
-try/catch;
-Exception;
-serviços;
-separação de responsabilidades;
-retorno de objetos;
-retorno de valores;
-string.Split();
-arrays;
-int.Parse();
-int.TryParse();
-switch;
-validação de dados;
-conceitos básicos de IPv4;
-máscara de rede;
-prefixo CIDR.
-================================================================================
-IDEIA FUTURA — DESCOBERTA DE DISPOSITIVOS
-A funcionalidade futura deverá permitir ao usuário informar:
+E:
 
-IP:
+```csharp
+lock (dispositivosEncontrados)
+```
 
-192.168.1.0
+é necessário para proteger a lista quando várias threads tentam modificá-la.
 
-Máscara:
+Ainda NÃO implementamos esse código.
 
-255.255.255.0
+---
 
-O NetAssist deverá então:
+# 17. O que fazer quando eu disser "vamos"
 
-Identificar a rede;
-Determinar a faixa de endereços;
-Gerar os endereços que deverão ser analisados;
-Fazer Ping;
-Tentar descobrir hostname;
-Obter MAC/fabricante quando possível;
-Coletar outras informações;
-Fazer classificação com base em evidências;
-Criar objetos NetworkDevice;
-Adicionar os dispositivos ao NetworkDeviceManager.
-Fluxo futuro:
+Quando eu disser **"vamos"**, continue EXATAMENTE nessa etapa:
 
-IP + Máscara
-↓
-Endereço da rede
-↓
-Faixa de IPs
-↓
-Ping
-↓
-Hostname
-↓
-MAC/Fabricante
-↓
-Outras informações
-↓
-Classificação
-↓
-NetworkDevice
-↓
-NetworkDeviceManager
+**Implementar o `Parallel.ForEach` para testar os IPs simultaneamente.**
 
-IMPORTANTE:
+Explique:
 
-A classificação NÃO deve assumir que um equipamento é Router,
-Switch, Server ou AccessPoint apenas porque respondeu ao Ping.
+* o que é uma thread;
+* por que o `Parallel.ForEach` pode acelerar;
+* o que significa `MaxDegreeOfParallelism`;
+* por que usamos `lock`;
+* como o código funciona;
+* como testar;
+* comparar mentalmente com o método sequencial.
 
-A classificação deverá considerar informações como:
+Não avance ainda para:
 
-Ping;
-hostname;
-MAC;
-fabricante;
-portas;
-SNMP quando disponível e autorizado;
-outras informações de rede.
-Quando não houver informação suficiente:
+* `async/await`;
+* hostname;
+* MAC;
+* fabricante;
+* portas;
+* SNMP;
+* classificação de dispositivos;
+* criação automática de `NetworkDevice`;
+* integração com `NetworkDeviceManager`;
+* DNS;
+* Traceroute;
+* monitoramento.
 
-DeviceStatus.Unknown
+Tudo isso fica para etapas posteriores.
 
-ou classificação desconhecida deve ser aceita.
+## Regra final
 
-Não inventar classificações.
+Sempre mantenha o desenvolvimento didático.
 
-================================================================================
-PRÓXIMA ETAPA
-O próximo passo lógico é descobrir o endereço da rede a partir de:
+**Uma etapa por vez.**
 
-IP:
+Depois de eu testar, espere eu dizer **"foi"**.
 
-192.168.1.25
-
-Máscara:
-
-255.255.255.0
-
-Resultado:
-
-192.168.1.0
-
-Isso é necessário porque o usuário pode informar o IP de qualquer
-equipamento da rede, e não necessariamente o endereço da rede.
-
-Exemplo:
-
-192.168.1.25
-255.255.255.0
-↓
-192.168.1.0
-
-IMPORTANTE:
-
-Ainda NÃO implementar:
-
-Ping da rede;
-geração completa dos IPs;
-hostname;
-MAC;
-fabricante;
-classificação;
-criação automática de NetworkDevice;
-NetworkDeviceManager integrado à descoberta.
-Tudo deve continuar sendo implementado em pequenas etapas.
-
-================================================================================
-REGRA DE DESENVOLVIMENTO
-Sempre avançar uma etapa por vez.
-
-Não entregar o projeto inteiro.
-
-Não implementar descoberta automática, DNS, Traceroute, Scanner e Monitoramento
-ao mesmo tempo.
-
-Primeiro terminar corretamente a etapa atual.
-
-Depois testar.
-
-Esperar minha confirmação.
-
-Somente então continuar.
-
-================================================================================
-PONTO EXATO ONDE PARAMOS
-A conversão de máscara para prefixo já está implementada e testada.
-
-Exemplo:
-
-255.255.255.0 → /24
-
-A versão atual utiliza int.TryParse(), switch e a variável encontrouZero
-para validar máscaras.
-
-A decisão de projeto é utilizar IP + Máscara na interface, e não exigir que
-o usuário conheça CIDR.
-
-O próximo passo é implementar somente o cálculo do endereço da rede.
-
-Exemplo:
-
-IP:
-192.168.1.25
-
-Máscara:
-255.255.255.0
-
-Resultado:
-
-192.168.1.0
-
-Não avançar além dessa etapa.
-
-================================================================================
-INSTRUÇÃO FINAL
-Continue o projeto exatamente desse ponto.
-
-Primeiro confirme que entendeu o estado atual.
-
-Não repita etapas que já foram concluídas.
-
-Não recrie classes que já existem.
-
-Não altere funcionalidades existentes sem necessidade.
-
-Não avance várias etapas.
-
-Siga o formato:
-
-Objetivo;
-Arquivo;
-Código completo;
-Explicação;
-Conceito de POO/C#;
-Teste;
-Esperar minha confirmação.
-O foco é construir o NetAssist enquanto eu aprendo C# e POO na prática.
-
-FIM DO PROMPT DE CONTINUIDADE
-*/
+ */
 
 
 

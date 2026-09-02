@@ -17,7 +17,8 @@ namespace NetAssist.Services
             {
                 using (Ping ping = new Ping())
                 {
-                    PingReply reply = ping.Send(ipAddress);
+                    PingReply reply = ping.Send(ipAddress, 500);
+
 
                     if (reply.Status == IPStatus.Success)
                     {

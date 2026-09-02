@@ -15,7 +15,7 @@ namespace NetAssist.Services
        {
            dispositivos.Add(dispositivo);
        }
-
+        
        public IReadOnlyList<NetworkDevice> GetDevices()
        {
            return dispositivos.AsReadOnly();
