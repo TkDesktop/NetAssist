@@ -24,6 +24,7 @@ namespace NetAssist.Services
                     {
                         return new PingResult
                         {
+                            ipAddress = ipAddress,
                             status = DeviceStatus.Online,
                             latency = reply.RoundtripTime,
                             message = "Ping realizado com sucesso."
@@ -32,6 +33,7 @@ namespace NetAssist.Services
 
                     return new PingResult
                     {
+                        ipAddress = ipAddress,
                         status = DeviceStatus.Offline,
                         latency = 0,
                         message = "O dispositivo não respondeu ao Ping."
@@ -42,6 +44,7 @@ namespace NetAssist.Services
             {
                 return new PingResult
                 {
+                    ipAddress = ipAddress,
                     status = DeviceStatus.Unknown,
                     latency = 0,
                     message = $"Erro ao executar o Ping: {ex.Message}"

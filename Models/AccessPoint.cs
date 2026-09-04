@@ -8,7 +8,7 @@ namespace NetAssist.Models
 {
     public class AccessPoint : NetworkDevice
     {
-        public string Ssid { get; set; }
+        public string ssid { get; set; }
         public override string GetDeviceType()
         {
             return "Access Point";

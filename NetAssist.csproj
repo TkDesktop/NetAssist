@@ -99,14 +99,19 @@
     <Compile Include="Models\AccessPoint.cs" />
     <Compile Include="Models\DeviceStatus.cs" />
     <Compile Include="Models\NetWorkDevice.cs" />
+    <Compile Include="Models\NetworkScanResult.cs" />
+    <Compile Include="Models\PingAnalysisResult.cs" />
     <Compile Include="Models\PingResult.cs" />
     <Compile Include="Models\Router.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Switch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DeviceInfoService.cs" />
     <Compile Include="Services\NetworkDeviceManager.cs" />
     <Compile Include="Services\NetworkDiscoveryService.cs" />
+    <Compile Include="Services\NetworkScanService.cs" />
+    <Compile Include="Services\PingAnalysisService.cs" />
     <Compile Include="Services\PingService.cs" />
     <EmbeddedResource Include="frmDashboard.resx">
       <DependentUpon>frmPrincipal.cs</DependentUpon>
